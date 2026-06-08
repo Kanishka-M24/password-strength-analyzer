@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SecurePass Analyzer</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>🔐 SecurePass Analyzer</h1>
+
+        <p class="subtitle">
+            Smart Password Security Checker
+        </p>
+
+        <form method="POST">
+
+            <div class="password-wrapper">
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                <span
+                    class="eye"
+                    onclick="togglePassword()">
+                    👁️
+                </span>
+
+            </div>
+
+            <div class="button-group">
+
+                <button
+                    type="submit"
+                    name="action"
+                    value="analyze">
+
+                    Analyze Password
+
+                </button>
+
+                <button
+                    type="submit"
+                    name="action"
+                    value="generate">
+
+                    Generate Password
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    {% if score is not none %}
+
+    <div class="card">
+
+        <h2>Password Score</h2>
+
+        <div class="score-box">
+            {{ score }}/7
+        </div>
+
+        <div class="meter">
+
+            <div
+                class="meter-fill
+                {% if strength=='WEAK' %}
+                    weak-fill
+                {% elif strength=='MEDIUM' %}
+                    medium-fill
+                {% else %}
+                    strong-fill
+                {% endif %}"
+
+                style="width:{{ percentage }}%;">
+
+            </div>
+
+        </div>
+
+        <h2
+        class="
+        {% if strength =='WEAK' %}
+            weak
+        {% elif strength =='MEDIUM' %}
+            medium
+        {% else %}
+            strong
+        {% endif %}
+        ">
+
+            {{ strength }}
+
+        </h2>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Security Analysis</h2>
+
+        <div class="analysis-grid">
+
+
+            <div class="info-box">
+                <h3>Crack Time</h3>
+                <p>{{ crack_time }}</p>
+            </div>
+
+            <div class="info-box">
+                <h3>Breach Risk</h3>
+                <p>{{ breach_risk }}</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h2>Password Checklist</h2>
+
+        <div class="checklist">
+
+            <p>
+                {% if checks.length %}✅{% else %}❌{% endif %}
+                Minimum 8 Characters
+            </p>
+
+            <p>
+                {% if checks.uppercase %}✅{% else %}❌{% endif %}
+                Contains Uppercase
+            </p>
+
+            <p>
+                {% if checks.lowercase %}✅{% else %}❌{% endif %}
+                Contains Lowercase
+            </p>
+
+            <p>
+                {% if checks.number %}✅{% else %}❌{% endif %}
+                Contains Number
+            </p>
+
+            <p>
+                {% if checks.special %}✅{% else %}❌{% endif %}
+                Contains Special Character
+            </p>
+
+            <p>
+                {% if checks.common %}✅{% else %}❌{% endif %}
+                Not Common Password
+            </p>
+
+            <p>
+                {% if checks.unique %}✅{% else %}❌{% endif %}
+                Good Uniqueness
+            </p>
+
+        </div>
+
+    </div>
+
+    {% if suggestions %}
+
+    <div class="card">
+
+        <h2>Suggestions</h2>
+
+        <ul>
+
+            {% for item in suggestions %}
+
+            <li>{{ item }}</li>
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+    {% endif %}
+
+    {% if generated_password %}
+
+    <div class="card">
+
+        <h2>Generated Strong Password</h2>
+
+        <div
+            id="generated"
+            class="generated-password">
+
+            {{ generated_password }}
+
+        </div>
+
+        <button
+            class="copy-btn"
+            onclick="copyPassword()">
+
+            Copy Password
+
+        </button>
+
+    </div>
+
+    {% endif %}
+
+    {% endif %}
+
+
+
+<script>
+
+function togglePassword(){
+
+    let pwd =
+    document.getElementById("password");
+
+    if(pwd.type === "password"){
+
+        pwd.type = "text";
+
+    }
+    else{
+
+        pwd.type = "password";
+    }
+}
+
+function copyPassword(){
+
+    let text =
+    document.getElementById("generated")
+    .innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Password Copied!");
+}
+
+</script>
+
+</body>
+</html>
