@@ -309,4 +309,12 @@ li{
 
         font-size:35px;
     }
+    .footer{
+        text-align:center;
+        padding:20px;
+        margin-top:20px;
+        color:#38bdf8;
+        font-size:15px;
+        font-weight:500;
+    }
 }
